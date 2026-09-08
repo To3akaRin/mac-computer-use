@@ -1,29 +1,148 @@
+<div align="center">
+
 # mac-computer-use
 
-让 Agent 操作 Mac 桌面应用：先观察，优先后台读写，需要时受控使用前台，并明确区分“已发送事件”和“已验证结果”。
+### 把 Mac 桌面，变成 Agent 的执行环境。
 
-独立运行的 Agent Skill，包含 Swift 原生命令行工具和 Node.js CDP 工具。适用于桌面应用自动化、窗口截图、中文输入和界面验收；普通网页优先使用浏览器工具。
+**让 Agent 看见窗口、读懂控件、输入中文、点击按钮，并拿出结果证据。**
 
-## 快速开始
+[![CI](https://github.com/To3akaRin/mac-computer-use/actions/workflows/ci.yml/badge.svg)](https://github.com/To3akaRin/mac-computer-use/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/To3akaRin/mac-computer-use)](https://github.com/To3akaRin/mac-computer-use/releases)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![macOS](https://img.shields.io/badge/macOS-14%2B-black?logo=apple)](docs/acceptance.md)
 
-要求 macOS 14+、Swift 6 Command Line Tools；CDP 另需 Node.js 22.4+。当前发布的实际验证范围见 [验收报告](docs/acceptance.md)。
+**Swift 原生内核 · AX 语义控制 · CDP 真实输入 · 受控焦点切换 · 可验证结果**
+
+[快速上手](#快速上手) · [核心能力](#核心能力) · [真实验收](#真实验收) · [命令接口](API.md) · [下载](https://github.com/To3akaRin/mac-computer-use/releases/latest)
+
+</div>
+
+---
+
+## 从参考照片，走到能旋转的 3D 展区。
+
+![用户提供的中央展区 3D 建模案例，浏览器中实际旋转录制](assets/showcase-3d.gif)
+
+**用户实战案例：中央展区 3D 建模。** 中央柱体、顶部圆环、弧形柜体、门架、终端和收银台，组成一个可以在浏览器中转动、检查的三维空间。
+
+**3,388 个三角面 · 117 个网格 · 单文件 GLB 约 218 KiB。** 上图直接录自模型查看器，多角度展示实际几何。模型带有可编辑 Blender 源文件；尺寸依据参考照片估算。
+
+从用户提供的建模成果，到原生应用操作，再到浏览器中检查产物，**把 Agent 的执行能力落到看得见、拿得到的成果上。**
+
+[查看静态大图](assets/showcase-3d-poster.jpg) · [素材来源与录制说明](docs/media.md)
+
+## 让自动化走进真正的桌面工作
+
+打开应用、定位窗口、填写表单、点击确认、检查结果、截取证据——这些原本需要人守着屏幕完成的动作，现在可以交给 Agent 编排。
+
+**mac-computer-use 给 Agent 一套直接操作 Mac 的执行工具。** 它把原生窗口、辅助功能树和内嵌 Chromium 页面连接到同一套工作流程：先观察目标，再选择通道，执行后验证结果。
+
+没有现成 API 的桌面环节，也有机会接入自动化。只要 Agent 能读取 `SKILL.md` 并执行本地命令，就能使用这套工具；Codex 附带自动发现元数据，核心能力不绑定专属插件。
+
+> **你负责提出目标，Agent 负责观察、操作和核对结果。**
+
+## 直接这样交代 Agent
+
+安装技能后，可以从这些任务开始。以下是任务示例，具体可执行范围取决于目标应用暴露的控件和接口。
+
+```text
+“探测这个 Mac 应用有哪些自动化入口，选最可靠的方式操作。”
+
+“找到目标窗口，把这段中文填进指定输入框，再读回来核对。”
+
+“点击这个按钮，检查应用状态是否真的改变，截一张结果图。”
+
+“通过这个桌面客户端的 CDP 端口完成表单操作，每一步都检查结果。”
+
+“给这个桌面流程做一次回归验收，遇到未知结果就停下来检查。”
+```
+
+## 核心能力
+
+| 能力 | 具体能做什么 |
+| --- | --- |
+| **看清目标** | 列出窗口、进程、标题和几何信息；读取 AX 控件；观察 CDP 页面结构。 |
+| **找到入口** | 探测应用 bundle、脚本字典、URL scheme 和候选调试端口，帮助 Agent 选择控制通道。 |
+| **输入到位** | AX 精确设值和读回；原生 Unicode 输入；CDP 通过 `Input.insertText` 写入输入框与富文本区域。 |
+| **真正交互** | 原生点击、悬停、滚动、快捷键；CDP 渲染器鼠标和键盘事件。 |
+| **受控接管** | 后台通道优先；需要前台时检查用户空闲、目标与互斥锁，操作后恢复原焦点。 |
+| **准确定位** | 明确区分逻辑点、归一化坐标和截图像素；快照绑定窗口，过期或几何变化时拒绝执行。 |
+| **拿出证据** | ScreenCaptureKit 窗口截图、AX 值读回、CDP 只读断言与结构化 JSON 结果。 |
+| **连续执行** | CDP JSON 批处理；任何一步失败、拒绝或结果未知，立即停止后续步骤。 |
+
+**控制工具在本机运行。原生内核使用系统框架，CDP 客户端零运行时 npm 依赖。** 不需要自建服务端、数据库或独立 API Key。
+
+## 看 Agent 真正动手
+
+### 原生 Mac：观察、输入、点击、读回
+
+![项目原生工具驱动测试应用：预演、中文输入、点击与结果读回](assets/native-demo.gif)
+
+窗口画面由本项目原生工具实际截取，展示预演不改值、AX 中文写入、真实点击计数和键盘输入后的结果核对。外围阶段文案经过排版，播放节奏不作为耗时基准。[静态封面](assets/native-demo-poster.png)
+
+### CDP：让一句指令走完输入、执行与验证
+
+![CDP 实际驱动合成页面：中文输入、点击生成预览、独立状态验证](assets/cdp-demo.gif)
+
+合成页面中的输入与点击由本项目 CDP 工具真实驱动：中文进入输入框，点击生成预览，最后读取页面结果并断言一致。[静态封面](assets/cdp-demo-poster.png)
+
+## 把“操作过了”推进到“结果核对过了”
+
+桌面自动化最难的部分，是确保动作落在正确目标上，并判断它究竟有没有生效。
+
+这套工具把执行边界放进了实现：
+
+- **执行前预演。** 写命令支持 `--dry-run`，检查参数和可用的前置条件，不实际输入、点击或重启。
+- **定位有依据。** 元素必须明确，坐标单位必须明确；旧窗口引用和不唯一的目标会被拒绝。
+- **使用前台有秩序。** 用户空闲至少 2 秒，最多等待 15 秒；前台操作使用会话锁，用户恢复输入时停止。
+- **结果未知就停。** 写入后无法确认结果时返回 `unknown`，不切换通道盲目重放。
+- **验证本身保持只读。** CDP 等待条件和断言拒绝副作用，避免“为了检查成功，又执行了一遍”。
+
+Agent 得到的是可处理的 JSON：目标是谁、走了哪个通道、状态如何、证据在哪。对点击和按键，事件派发与业务完成明确区分；输入框文字正确，也不会被当成已经保存或发送。
+
+## 真实验收
+
+**原生桌面与 CDP 两条执行路径，都跑过真实交互。**
+
+| 场景 | 已验证结果 |
+| --- | --- |
+| 原生中文设值 | 写入指定 AX 元素，再精确读回中文。 |
+| 原生点击 | 点击专用测试窗口按钮，核对计数器实际增加。 |
+| 原生键盘 | 点击输入框、Cmd+A、输入中文，再用 AX 核对最终文本。 |
+| 焦点恢复 | 从第二个测试应用切到目标应用执行点击，再核对原前台 PID 已恢复。 |
+| 窗口截图 | 通过 ScreenCaptureKit 生成测试窗口 PNG。 |
+| CDP 中文与富文本 | 独立 Chrome 测试页面中，输入框及 contenteditable 内容读回一致。 |
+| CDP 鼠标与键盘 | 点击改变页面结果；ArrowLeft 实际改变光标位置。 |
+| 预演与失败停止 | 预演不改值；未知结果阻止批处理继续；只读条件拒绝 DOM 写入。 |
+
+**GitHub CI：6 项 XCTest + 15 项原生自检 + 20 项 CDP 单测通过。** 另已完成两套本机真实交互验收，以及无构建缓存的干净目录编译。
+
+[查看 CI 验证](https://github.com/To3akaRin/mac-computer-use/actions/runs/34208441256) · [查看验收记录与兼容范围](docs/acceptance.md)
+
+这些结果来自专用测试应用和隔离浏览器，不代表所有第三方应用都已验收。当前实机环境为 **macOS 15.7.7 / Apple Silicon / Swift 6.1.2**；Node.js **22.23.1 与 24.18.0** 已验证。最低目标为 macOS 14，Intel 与 macOS 14 实机矩阵待补充。
+
+## 快速上手
+
+需要 **macOS 14+、Swift 6 Command Line Tools**；CDP 另需 **Node.js 22.4+**。
 
 ```bash
+# 已安装 Command Line Tools 时跳过这一行。
 xcode-select --install
-# 如果已经安装 Command Line Tools，无需重复安装。
+
 git clone https://github.com/To3akaRin/mac-computer-use.git
 cd mac-computer-use
 bash scripts/build.sh
+
 .build/release/mac-computer-use doctor
 .build/release/mac-computer-use help
 node scripts/cdp.mjs --help
 ```
 
-在系统设置 → 隐私与安全中，为启动工具的宿主终端或 Agent 应用授予“辅助功能”和“屏幕与系统音频录制”（名称依系统版本不同）。权限由用户在系统界面授予；工具不修改权限数据库。授权后重新启动宿主，再运行 `doctor`。
+在系统设置 → 隐私与安全中，为启动工具的终端或 Agent 应用授予“辅助功能”和“屏幕与系统音频录制”（名称依系统版本不同）。授权后重启宿主并复查 `doctor`。工具不修改系统权限数据库。
 
-## 安装为 Skill
+### 安装到 Codex
 
-仓库根目录就是技能目录。Codex 可直接克隆到个人技能目录；若已有同名目录，先检查，不覆盖。
+仓库根目录就是技能目录。已有同名目录时先检查，不覆盖。
 
 ```bash
 mkdir -p "$HOME/.codex/skills"
@@ -32,41 +151,49 @@ cd "$HOME/.codex/skills/mac-computer-use"
 bash scripts/build.sh
 ```
 
-在支持 Agent Skills 的工具中，将本目录放入该工具的技能发现路径。Codex 附带界面元数据；其他 Agent 使用 `SKILL.md` 和同一套可执行脚本。没有专属 MCP 依赖，也不会自动安装或更新自己。
+其他支持 Agent Skills 的工具，将本目录放入其技能发现路径即可。核心工具独立运行，不依赖专属 MCP 插件，也不会自动安装或更新自己。
 
-## 使用示例
+## 跑通第一条原生观察流程
 
 ```bash
 mkdir -p artifacts
 .build/release/mac-computer-use probe --app com.apple.TextEdit
 .build/release/mac-computer-use windows
-# 将下面的 12345 换为 windows 实际返回的窗口 id。
+
+# 将 12345 换成 windows 实际返回的目标窗口 id。
 .build/release/mac-computer-use ax --window 12345 --snapshot-out artifacts/window.json
 .build/release/mac-computer-use shot --window 12345 --output artifacts/window.png --snapshot-out artifacts/window-image.json
 ```
 
-截图、快照绑定实际窗口。写操作的参数与完整例子见 [命令接口](API.md)，先做 `--dry-run` 再执行。返回未知时重新观察，不重复发送。
+观察后再执行写操作。完整参数、预演和坐标说明见 [原生控制指南](references/native.md) 与 [命令接口](API.md)。
 
-对于已经开放本地 CDP 的桌面应用：
+### 连接内嵌 Chromium 页面
+
+目标应用需要实际支持并开放本地调试端口：
 
 ```bash
 node scripts/cdp.mjs targets --endpoint http://127.0.0.1:9222
 node scripts/cdp.mjs snapshot --endpoint http://127.0.0.1:9222 --target PAGE_ID
 ```
 
-`PAGE_ID` 必须来自探测结果。端口也必须使用目标应用实际开放的端口；仅指定端口不会自动启动、重启或修改应用。
+`PAGE_ID` 来自探测结果，端口使用目标应用的实际端口。客户端不会因为指定端口而自动重启应用。输入、断言与批处理示例见 [CDP 指南](references/cdp.md)。
 
-## 设计与目录
+## 一套轻量、可读、可扩展的实现
 
-- `Sources/`：Swift 原生控制、可测试规则及专用测试窗口。
-- `scripts/`：编译入口及零运行时 npm 依赖的 CDP 客户端。
-- `tests/`：自动化测试与隔离测试页面。
-- `references/`：Agent 按需阅读的控制流程、权限排障和验证说明。
-- `docs/`：实施规格、验收记录；`agents/`：Codex 元数据。
+```text
+mac-computer-use/
+├── SKILL.md              # Agent 的执行入口
+├── Sources/              # Swift 原生控制、核心规则与测试应用
+├── scripts/              # 编译入口、CDP 客户端与原生验收脚本
+├── tests/                # 自动测试与隔离测试页面
+├── references/           # 控制通道、权限和结果验证指南
+├── agents/               # Codex 元数据
+└── docs/                 # 实施规格与验收记录
+```
 
-Swift 调用 AppKit、辅助功能、CoreGraphics 和 ScreenCaptureKit；Node.js 使用原生 HTTP/WebSocket。控制宿主桌面不能部署在普通 Docker 容器中，本项目没有服务端或数据库。
+Swift 调用 **AppKit、Accessibility、CoreGraphics、ScreenCaptureKit**；Node.js 使用原生 HTTP 与 WebSocket。项目直接控制宿主 macOS 桌面，无服务端或数据库，不使用 Docker 部署。
 
-## 开发与测试
+## 开发与复现
 
 ```bash
 bash scripts/build.sh
@@ -78,38 +205,42 @@ node --check scripts/lib/cdp.mjs
 bash -n scripts/build.sh
 ```
 
-真实 GUI 测试需要登录中的 Mac 桌面和系统权限。无桌面 CI 只能验证构建、纯逻辑和协议模拟，不能证明真实 GUI 操作成功。具体命令与本机结果见验收报告。
-
-遵循 [贡献指南](CONTRIBUTING.md)，修改行为时同步接口和参考文档。版本记录见 [CHANGELOG](CHANGELOG.md)。
-
-## 配置与数据
-
-不需要 `.env` 或 API Key；窗口、端口、超时和输出位置由命令参数明确传入。`artifacts/`、`evidence/`、`.env` 和构建缓存默认不进入 Git。真实截图、输入内容和日志不会自动上传，也不会自动写进技能文档。
-
-## 常见问题
-
-- **窗口或元素不可访问**：先检查 `doctor`，再重新列窗口和生成快照；不要复用已经移动或关闭窗口的引用。
-- **写入返回未知**：表示工具无法确认后置结果，不等于未执行。通过新的 AX、页面状态或产物检查后再决定下一步。
-- **无法操作其他桌面**：后台读取是否可用取决于应用；前台输入不自动跨桌面，需将目标放到当前桌面。
-- **CDP 连接失败**：检查应用是否真正支持并启用了调试端口。不要因为它含有 Chromium 组件就假定调试可用。
-- **测试框架不可用**：精简 Command Line Tools 可能缺少 XCTest；完整自动测试可在包含 XCTest 的 Xcode/macOS CI 环境运行，本机自检与实测范围单独记录。
-
-## 许可证
-
-MIT，Copyright (c) 2026 To3akaRin。项目不提供第三方应用的通用成功保证，兼容性以实际验收记录为准。
-
-可选的真实 CDP 验收使用独立临时浏览器目录。`CHROME_BINARY` 仅用于指定测试浏览器，不影响用户当前 Chrome 配置：
+复现真实 CDP 验收，会启动并清理独立的临时 Chrome profile：
 
 ```bash
 CHROME_BINARY='/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' npm run test:cdp-live
 ```
 
-本次新增环境变量只有上述可选测试配置，默认路径适用于标准 Chrome 安装；运行工具本身无需配置环境变量。
-
-原生实机验收另需 Python 3（仅测试脚本使用），运行前请暂时停止键鼠操作：
+复现原生实机验收，另需 Python 3；运行期间暂时停止键鼠操作：
 
 ```bash
 python3 scripts/native-smoke.py
 ```
 
-该脚本创建并清理专用测试应用，只操作合成测试内容。
+该脚本创建并清理专用测试应用，验证合成内容。无桌面 CI 验证构建与测试逻辑，真实桌面执行由本机实测覆盖。
+
+贡献前阅读 [CONTRIBUTING.md](CONTRIBUTING.md)，行为变更同步接口、参考文档和 [CHANGELOG.md](CHANGELOG.md)。
+
+## 配置与数据
+
+运行工具不需要 `.env` 或 API Key，目标、端口、超时和输出路径由参数明确传入。
+
+本版唯一新增的可选环境变量是测试用 `CHROME_BINARY`，默认指向标准 Chrome 安装路径；模板见 [.env.example](.env.example)，工具不自动加载该文件。
+
+`artifacts/`、`evidence/`、`.env` 和构建缓存默认不进入 Git。真实截图、输入内容及日志不会被工具自动上传或写回技能。
+
+## 常见问题
+
+- **窗口或元素不可访问？** 先检查 `doctor`，重新列窗口和生成快照。移动、关闭或重建后的目标不能继续使用旧引用。
+- **为什么返回 `unknown`？** 动作可能已经发生，但后置结果无法确认。先读回状态，不重复发送。
+- **能操作其他桌面吗？** 后台读取取决于应用；前台输入不会自动跨桌面，需要将目标放到当前桌面。
+- **应用用了 Chromium，为什么 CDP 连不上？** 是否开放调试取决于应用，需探测实际端口与页面。
+- **本机缺少 XCTest？** 精简 Command Line Tools 可能缺少框架；使用完整 Xcode 执行 `swift test`。独立自检和真实验收可按上面的命令运行。
+
+## 开源协作
+
+欢迎带着具体应用、明确场景和可复现证据参与：补充兼容性测试、改进元素定位、完善输入路径，让更多桌面工作进入 Agent 的执行范围。
+
+**把目标交给 Agent，把执行落到桌面。**
+
+MIT · Copyright (c) 2026 To3akaRin

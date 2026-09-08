@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="zh-CN">
+  <meta charset="utf-8" /><title>mac-computer-use native demonstration</title>
+  <style>
+    :root {
+      --paper: oklch(96% 0.012 75);
+      --ink: oklch(24% 0.009 65);
+      --orange: oklch(66% 0.19 38);
+      --soft: oklch(89% 0.02 75);
+      --green: oklch(45% 0.1 155);
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      width: 1100px;
+      height: 620px;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: "Avenir Next", "PingFang SC", sans-serif;
+      overflow: hidden;
+    }
+    header {
+      height: 83px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 38px;
+      border-bottom: 1px solid var(--soft);
+      font-weight: 700;
+      font-size: 21px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .mark {
+      background: var(--orange);
+      color: var(--paper);
+      font-size: 26px;
+      width: 35px;
+      height: 35px;
+      display: grid;
+      place-items: center;
+      border-radius: 10px;
+    }
+    .meta {
+      font-size: 13px;
+      font-weight: 500;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--green);
+    }
+    main {
+      height: 446px;
+      display: flex;
+    }
+    .story {
+      width: 365px;
+      flex-shrink: 0;
+      background: var(--orange);
+      padding: 35px 35px 20px;
+    }
+    .eyebrow {
+      font-size: 12px;
+      letter-spacing: 2px;
+      font-weight: 650;
+    }
+    .story h1 {
+      font-size: 55px;
+      line-height: 1.16;
+      font-weight: 750;
+      letter-spacing: -3px;
+      margin: 26px 0 18px;
+    }
+    .story p {
+      font-size: 18px;
+      line-height: 1.6;
+      font-weight: 500;
+      margin: 0;
+    }
+    .phase {
+      margin-top: 30px;
+      display: flex;
+      gap: 7px;
+    }
+    .phase i {
+      width: 35px;
+      height: 4px;
+      border-radius: 2px;
+      background: oklch(74% 0.14 38);
+    }
+    .phase i.done {
+      background: var(--ink);
+    }
+    .display {
+      position: relative;
+      flex: 1;
+      padding: 35px 32px 10px;
+    }
+    .window-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: oklch(45% 0.01 65);
+      margin-bottom: 16px;
+    }
+    .window-label strong {
+      color: var(--green);
+      font-size: 11px;
+    }
+    .frame {
+      width: 671px;
+      height: 344px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 14px;
+      background: oklch(91% 0.012 75);
+      box-shadow: 0 12px 25px oklch(30% 0.01 65 / 0.12);
+      overflow: hidden;
+    }
+    .frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+    footer {
+      height: 91px;
+      background: var(--ink);
+      color: var(--paper);
+      display: flex;
+      align-items: center;
+      padding: 0 38px;
+      gap: 28px;
+    }
+    .number {
+      font-size: 36px;
+      font-weight: 650;
+      color: oklch(76% 0.16 48);
+      width: 42px;
+    }
+    .caption {
+      flex: 1;
+    }
+    .caption h2 {
+      font-size: 21px;
+      margin: 0 0 6px;
+    }
+    .caption code {
+      font-family: "SFMono-Regular", monospace;
+      font-size: 12px;
+      color: oklch(78% 0.016 75);
+    }
+    .verify {
+      border: 1px solid oklch(60% 0.012 75);
+      border-radius: 30px;
+      padding: 9px 15px;
+      font-size: 12px;
+    }
+    .final .story {
+      background: oklch(80% 0.09 150);
+    }
+  </style>
+  <header>
+    <div class="brand"><span class="mark">↗</span>mac-computer-use</div>
+    <div class="meta"><span class="dot"></span>合成应用 · 原生实机截图</div>
+  </header>
+  <main>
+    <section class="story">
+      <div class="eyebrow">从指令，走到执行。</div>
+      <h1>让 Mac<br />开始执行。</h1>
+      <p>看见窗口。<br />操作控件。核对结果。</p>
+      <div class="phase"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    </section>
+    <section class="display">
+      <div class="window-label">
+        <span>ScreenCaptureKit / 实际窗口画面</span
+        ><strong id="stage">OBSERVE</strong>
+      </div>
+      <div class="frame"><img id="shot" alt="实际原生测试窗口截图" /></div>
+    </section>
+  </main>
+  <footer>
+    <div class="number" id="num">01</div>
+    <div class="caption">
+      <h2 id="caption">定位目标窗口</h2>
+      <code id="command">windows → ax → shot</code>
+    </div>
+    <div class="verify" id="verify">目标已观察</div>
+  </footer>
+  <script>
+    const stages = [
+      ["定位目标窗口", "windows → ax → shot", "OBSERVE", "窗口可读取"],
+      [
+        "先预演，再执行",
+        "ax-set --dry-run · 原值保持不变",
+        "PREVIEW",
+        "未产生写入",
+      ],
+      ["把中文真正写进去", "ax-set → 独立 AX 读回一致", "INPUT", "中文已核对"],
+      [
+        "一次点击，看见状态改变",
+        "click → unknown → AX 确认次数: 1",
+        "ACT",
+        "点击效果已核对",
+      ],
+      [
+        "键盘输入，结果精确读回",
+        "Cmd+A → type → 任务已验证",
+        "READ BACK",
+        "最终文本一致",
+      ],
+      [
+        "执行完成，证据落盘",
+        "AX 确认次数: 2 · PNG 已保存",
+        "VERIFIED",
+        "结果已验证",
+      ],
+    ];
+    window.render = async (index, source, progress) => {
+      const s = stages[index];
+      document.body.classList.toggle("final", index === 5);
+      document.querySelector("#num").textContent = String(index + 1).padStart(
+        2,
+        "0",
+      );
+      document.querySelector("#caption").textContent = s[0];
+      document.querySelector("#command").textContent = s[1];
+      document.querySelector("#stage").textContent = s[2];
+      document.querySelector("#verify").textContent = s[3];
+      document
+        .querySelectorAll(".phase i")
+        .forEach((e, i) => e.classList.toggle("done", i <= index));
+      const img = document.querySelector("#shot");
+      img.src = source;
+      await img.decode();
+      document.querySelector(".frame").style.transform =
+        `translateY(${(1 - progress) * 9}px)`;
+      document.querySelector(".frame").style.opacity = 0.75 + 0.25 * progress;
+      return true;
+    };
+  </script>
+</html>

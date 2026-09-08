@@ -1,0 +1,426 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>Mac Computer Use · 任务执行现场</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: #f5f3ee;
+        color: #202937;
+        font-family:
+          "PingFang SC",
+          -apple-system,
+          BlinkMacSystemFont,
+          sans-serif;
+        width: 1100px;
+        height: 620px;
+        overflow: hidden;
+      }
+      .shell {
+        padding: 32px 40px;
+      }
+      .eyebrow {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 12px;
+        letter-spacing: 1.6px;
+        font-weight: 700;
+        color: #666b72;
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .mark {
+        width: 24px;
+        height: 24px;
+        background: #ed694c;
+        border-radius: 7px;
+        display: grid;
+        place-items: center;
+        color: white;
+        font-size: 19px;
+        letter-spacing: 0;
+      }
+      .badge {
+        font-size: 11px;
+        letter-spacing: 0.3px;
+        padding: 7px 10px;
+        border: 1px solid #dcdedb;
+        border-radius: 20px;
+        color: #737b80;
+      }
+      .headline {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        margin: 21px 0 24px;
+      }
+      h1 {
+        font-size: 37px;
+        line-height: 1.15;
+        letter-spacing: -1px;
+        margin: 0;
+        font-weight: 750;
+      }
+      .subtitle {
+        font-size: 13px;
+        color: #747b84;
+        margin-top: 10px;
+      }
+      .live {
+        display: flex;
+        gap: 7px;
+        align-items: center;
+        font-size: 12px;
+        font-weight: 600;
+        margin-bottom: 4px;
+      }
+      .dot {
+        height: 7px;
+        width: 7px;
+        border-radius: 50%;
+        background: #ed694c;
+        box-shadow: 0 0 0 4px #f6e3da;
+      }
+      .panels {
+        display: grid;
+        grid-template-columns: 1.14fr 1fr;
+        gap: 18px;
+        height: 365px;
+      }
+      .app {
+        background: #fff;
+        border: 1px solid #e2e4e2;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 8px 24px #23303d05;
+      }
+      .toolbar {
+        height: 44px;
+        border-bottom: 1px solid #f0efeb;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 18px;
+        font-size: 11px;
+        color: #92989d;
+      }
+      .traffic {
+        display: flex;
+        gap: 5px;
+      }
+      .traffic i {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #e3e5e4;
+      }
+      .toolbar span:last-child {
+        font-size: 10px;
+        font-weight: 600;
+        letter-spacing: 0.8px;
+      }
+      .form {
+        padding: 23px 25px;
+      }
+      .app-title {
+        font-size: 20px;
+        font-weight: 700;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .pill {
+        font-size: 10px;
+        font-weight: 500;
+        color: #92989d;
+        border: 1px solid #e9eae7;
+        border-radius: 20px;
+        padding: 4px 8px;
+      }
+      .form p {
+        font-size: 12px;
+        line-height: 1.65;
+        color: #8a9095;
+        margin: 9px 0 20px;
+      }
+      label {
+        display: block;
+        color: #6e7781;
+        font-size: 11px;
+        font-weight: 600;
+        margin-bottom: 8px;
+      }
+      input {
+        width: 100%;
+        height: 47px;
+        border-radius: 8px;
+        border: 1px solid #dce0e3;
+        background: #fafbf9;
+        padding: 0 13px;
+        font:
+          600 14px "PingFang SC",
+          sans-serif;
+        color: #273242;
+        outline: none;
+      }
+      input:focus {
+        border-color: #ed694c;
+        box-shadow: 0 0 0 3px #ed694c12;
+        background: white;
+      }
+      button {
+        border: 0;
+        background: #ec6a4d;
+        color: #fff;
+        border-radius: 8px;
+        padding: 12px 17px;
+        margin-top: 15px;
+        font:
+          600 12px "PingFang SC",
+          sans-serif;
+        width: 100%;
+        text-align: left;
+        display: flex;
+        justify-content: space-between;
+        cursor: pointer;
+      }
+      button.done {
+        background: #273746;
+      }
+      .hint {
+        display: flex;
+        gap: 6px;
+        align-items: center;
+        font-size: 10px;
+        color: #979fa3;
+        margin-top: 14px;
+      }
+      .hint i {
+        height: 4px;
+        width: 4px;
+        background: #aaa;
+        border-radius: 50%;
+      }
+      .console {
+        background: #202e3b;
+        border-radius: 15px;
+        color: #edf3f4;
+        padding: 23px 24px;
+        position: relative;
+        overflow: hidden;
+      }
+      .console:before {
+        content: "";
+        position: absolute;
+        right: -50px;
+        top: -100px;
+        width: 220px;
+        height: 220px;
+        border: 1px solid #ffffff08;
+        border-radius: 50%;
+        box-shadow: 0 0 0 38px #ffffff03;
+      }
+      .console-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 11px;
+        font-weight: 600;
+        color: #b4c0c7;
+      }
+      .console-header span:last-child {
+        font:
+          10px ui-monospace,
+          monospace;
+        color: #748792;
+      }
+      .steps {
+        display: flex;
+        gap: 6px;
+        margin: 22px 0 21px;
+      }
+      .step {
+        flex: 1;
+        color: #728592;
+        border-top: 2px solid #3e4d58;
+        padding-top: 10px;
+        font-size: 10px;
+      }
+      .step b {
+        font-size: 9px;
+        display: block;
+        margin-bottom: 5px;
+        font-family: ui-monospace, monospace;
+        font-weight: 400;
+      }
+      .step.active {
+        border-color: #fa997d;
+        color: #fac3af;
+      }
+      .step.complete {
+        border-color: #84bbaa;
+        color: #a8d3c4;
+      }
+      .result-label {
+        font-size: 10px;
+        color: #7e93a0;
+        letter-spacing: 0.4px;
+      }
+      .result {
+        font-size: 23px;
+        font-weight: 650;
+        line-height: 1.5;
+        margin-top: 8px;
+        min-height: 71px;
+      }
+      .result.waiting {
+        color: #697c89;
+        font-size: 19px;
+      }
+      .code {
+        padding: 12px 14px;
+        border: 1px solid #ffffff0d;
+        background: #16232e;
+        border-radius: 8px;
+        font:
+          10px/1.8 ui-monospace,
+          monospace;
+        color: #8cabb5;
+        margin-top: 15px;
+        min-height: 62px;
+      }
+      .code strong {
+        font-weight: 400;
+        color: #b6ddca;
+      }
+      .footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 19px;
+        font-size: 10px;
+        color: #8b9198;
+      }
+      .footer b {
+        color: #52606c;
+        font-weight: 500;
+      }
+      .status {
+        font-size: 10px;
+        border: 1px solid #516374;
+        color: #9eb0ba;
+        padding: 3px 7px;
+        border-radius: 20px;
+      }
+      .status.verified {
+        color: #b4e0c9;
+        border-color: #557965;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="shell">
+      <div class="eyebrow">
+        <div class="brand"><span class="mark">↗</span>MAC COMPUTER USE</div>
+        <span class="badge">合成应用 · 实际工具驱动</span>
+      </div>
+      <div class="headline">
+        <div>
+          <h1>从一句指令，到可验证的结果。</h1>
+          <div class="subtitle">
+            中文输入 → 精确点击 → 状态读回 · 每一步都有依据
+          </div>
+        </div>
+        <div class="live"><i class="dot"></i>任务执行现场</div>
+      </div>
+      <div class="panels">
+        <section class="app">
+          <div class="toolbar">
+            <div class="traffic"><i></i><i></i><i></i></div>
+            <span>LOCAL DEMO APP</span><span>⌘</span>
+          </div>
+          <div class="form">
+            <div class="app-title">
+              活动邀请编辑器 <span class="pill">本地预览</span>
+            </div>
+            <p>
+              写下邀请标题，生成一份可检查的预览。<br />所有内容仅存在于这个演示页面。
+            </p>
+            <label for="title">邀请标题</label
+            ><input
+              id="title"
+              placeholder="等待 Agent 输入中文…"
+              autocomplete="off"
+            /><button id="run"><span>生成邀请预览</span><span>↗</span></button>
+            <div class="hint"><i></i>不会发送消息 · 不连接外部服务</div>
+          </div>
+        </section>
+        <section class="console">
+          <div class="console-header">
+            <span>执行与验证</span><span id="status" class="status">READY</span>
+          </div>
+          <div class="steps">
+            <div class="step active" id="step-observe">
+              <b>01 OBSERVE</b>定位目标
+            </div>
+            <div class="step" id="step-input"><b>02 INPUT</b>中文输入</div>
+            <div class="step" id="step-click"><b>03 ACT</b>生成预览</div>
+            <div class="step" id="step-verify"><b>04 VERIFY</b>读取结果</div>
+          </div>
+          <div class="result-label">页面实际输出 / LIVE RESULT</div>
+          <div id="result" class="result waiting">等待任务开始</div>
+          <div class="code" id="code">target: #title<br />state: ready</div>
+        </section>
+      </div>
+      <div class="footer">
+        <span><b>mac-computer-use</b> / 原生 Mac + CDP 自动化 Skill</span
+        ><span>真实浏览器渲染 · 实际输入与点击 · 输出经工具断言</span>
+      </div>
+    </main>
+    <script>
+      const title = document.querySelector("#title");
+      const run = document.querySelector("#run");
+      const result = document.querySelector("#result");
+      const code = document.querySelector("#code");
+      function step(id, status) {
+        document.querySelector("#step-" + id).className = "step " + status;
+      }
+      title.addEventListener("input", () => {
+        step("observe", "complete");
+        step("input", "active");
+        document.querySelector("#status").textContent = "INPUT";
+        code.textContent = "Input.insertText\nvalue: " + title.value;
+        code.style.whiteSpace = "pre-line";
+      });
+      run.addEventListener("click", () => {
+        if (!title.value) return;
+        step("input", "complete");
+        step("click", "complete");
+        step("verify", "active");
+        result.className = "result";
+        result.textContent = title.value;
+        document.querySelector("#status").textContent = "PREVIEW";
+        code.textContent =
+          "action: preview.created\nresult: " + result.textContent;
+        run.className = "done";
+        run.firstElementChild.textContent = "邀请预览已生成";
+      });
+      window.markVerified = function () {
+        step("verify", "complete");
+        const status = document.querySelector("#status");
+        status.textContent = "VERIFIED";
+        status.className = "status verified";
+        code.innerHTML =
+          "assert: output === input<br>status: <strong>success · 页面读回一致</strong>";
+      };
+    </script>
+  </body>
+</html>
