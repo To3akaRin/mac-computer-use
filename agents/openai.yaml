@@ -1,0 +1,6 @@
+interface:
+  display_name: "Mac Computer Use"
+  short_description: "操作 macOS 桌面应用，优先后台读写，受控使用前台，并验证实际结果。"
+  default_prompt: "使用 $mac-computer-use 探测目标 Mac 应用的可用控制方式，再执行任务并验证结果。"
+policy:
+  allow_implicit_invocation: true

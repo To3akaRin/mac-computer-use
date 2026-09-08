@@ -1,0 +1,13 @@
+{
+  "name": "mac-computer-use",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.4.0"
+  },
+  "scripts": {
+    "test": "node --test tests/cdp.test.mjs",
+    "test:cdp-live": "node tests/cdp-live.mjs"
+  }
+}

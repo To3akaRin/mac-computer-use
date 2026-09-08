@@ -1,0 +1,28 @@
+name: CI
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  macos:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Build Swift
+        run: bash scripts/build.sh
+      - name: Swift tests
+        run: swift test
+      - name: Native self tests
+        run: .build/release/NativeSelfTest
+      - name: CDP tests
+        run: npm test
+      - name: Syntax and diff checks
+        run: |
+          node --check scripts/cdp.mjs
+          node --check scripts/lib/cdp.mjs
+          bash -n scripts/build.sh
+          git diff --check

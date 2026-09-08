@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="zh-CN">
+  <meta charset="utf-8" /><title>mac-computer-use CDP fixture</title>
+  <label>中文输入 <input id="name" /></label>
+  <div id="editable" contenteditable="true">初始</div>
+  <button id="save">保存</button
+  ><output id="result">等待</output>
+  <script>
+    document.querySelector("#save").onclick = () => {
+      document.querySelector("#result").textContent =
+        document.querySelector("#name").value;
+    };
+  </script>
+</html>
