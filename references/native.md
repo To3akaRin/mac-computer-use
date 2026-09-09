@@ -1,5 +1,7 @@
 # 原生控制
 
+跨 runtime 调用优先使用 `sh "$SKILL_DIR/scripts/run.sh" native …`。`SKILL_DIR` 由实际技能路径确定，以下保留原有直接调用方式。
+
 从技能根目录运行 `bash scripts/build.sh`，之后使用 `.build/release/mac-computer-use`。调用时使用解析后的技能绝对路径，避免依赖 Agent 当前目录。
 
 ```bash

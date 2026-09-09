@@ -2,6 +2,29 @@
 
 本项目没有 HTTP 服务。原生入口为 `.build/release/mac-computer-use`；CDP 入口为 `node scripts/cdp.mjs`。所有路径由调用方明确提供，下面的窗口 id、页面 id 与选择器都是示例。
 
+## 通用启动、安装与打包
+
+```bash
+sh scripts/run.sh native doctor
+sh scripts/run.sh native windows
+sh scripts/run.sh cdp --help
+sh scripts/install.sh --skills-dir "/目标技能父目录" --dry-run
+sh scripts/install.sh --skills-dir "/目标技能父目录"
+sh scripts/package.sh --output artifacts/mac-computer-use-0.2.0.zip
+```
+
+| 入口 | 参数 | 行为 |
+| --- | --- | --- |
+| `run.sh` | `native` 或 `cdp`，后接原工具参数 | 检查依赖并转发，保留调用者工作目录、原始参数及退出码 |
+| `install.sh` | 必填 `--skills-dir PATH`；可选 `--dry-run` | 在指定父目录下复制 `mac-computer-use/`，已有目标拒绝，预演不创建文件 |
+| `package.sh` | 必填 `--output FILE.zip` | 根据同一文件清单生成单顶层技能 ZIP 和 SHA-256 |
+
+启动器的准备日志进入标准错误，不混入子工具 JSON；启动准备失败返回退出码 1。原生模式要求 macOS 14+、Swift 6+ 和可写技能构建目录，CDP 模式要求 Node.js 22.4+。运行命令无需假定技能安装在某个 runtime 的固定目录，中文、空格和符号链接均可用。
+
+指定目录安装需要 macOS 和 Python 3 标准库；打包需要 Python 3、zip、shasum。Python 仅用于原子提交目录或文件，保证竞争创建目标时也不覆盖、不嵌套。预演不依赖 Python。
+
+安装和打包使用 `scripts/package-files.txt`，不依赖当前 Git 历史。包中保留 MIT 许可证及完整源码，排除 `.git`、`.build`、`.env`、原始录制及缓存。客户端发现方式见 [跨 runtime 使用](references/runtimes.md)。
+
 ## 通用输出
 
 除帮助外，标准输出使用 JSON。`target` 标识应用、窗口或页面，`channel` 区分 `native` 与 `cdp`，`error` 表达错误，`evidence` 列出证据文件。不同命令在 `data` 中返回相应结果。

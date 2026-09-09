@@ -8,8 +8,8 @@ jobs:
   macos:
     runs-on: macos-15
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
         with:
           node-version: '22'
       - name: Build Swift
@@ -18,11 +18,18 @@ jobs:
         run: swift test
       - name: Native self tests
         run: .build/release/NativeSelfTest
-      - name: CDP tests
+      - name: Protocol, launcher and installation tests
         run: npm test
+      - name: Agent Skills reference validation
+        run: |
+          python3 -m venv "$RUNNER_TEMP/skills-ref"
+          "$RUNNER_TEMP/skills-ref/bin/pip" install 'git+https://github.com/agentskills/agentskills.git@69ef37e9424c0a7ea9dd2293b559e43ec8176379#subdirectory=skills-ref'
+          "$RUNNER_TEMP/skills-ref/bin/skills-ref" validate "$GITHUB_WORKSPACE"
+      - name: Skill package
+        run: sh scripts/package.sh --output "$RUNNER_TEMP/mac-computer-use-0.2.0.zip"
       - name: Syntax and diff checks
         run: |
           node --check scripts/cdp.mjs
           node --check scripts/lib/cdp.mjs
-          bash -n scripts/build.sh
+          sh -n scripts/build.sh scripts/run.sh scripts/install.sh scripts/package.sh scripts/lib/package-common.sh
           git diff --check

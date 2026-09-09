@@ -13,7 +13,13 @@
 
 
 
-[快速上手](#快速上手) · [核心能力](#核心能力) · [真实验收](#真实验收) · [命令接口](API.md) · [下载](https://github.com/To3akaRin/mac-computer-use/releases/latest)
+**基于开放的 [Agent Skills 协议](https://agentskills.io/)。一份技能包，接入多种 Agent。**
+
+Claude Code · Codex · Kimi Code · Cursor · OpenClaw · WorkBuddy · 豆包工作 · 千问办公 · ZCode
+
+支持读取完整技能文件并执行 macOS 本机命令的 runtime 可接入；具体安装方式与实测状态见 [兼容表](references/runtimes.md)。
+
+[快速上手](#快速上手) · [核心能力](#核心能力) · [验收记录](docs/universal-v0.2.md) · [命令接口](API.md) · [下载](https://github.com/To3akaRin/mac-computer-use/releases/latest)
 
 </div>
 
@@ -108,7 +114,7 @@ Agent 得到的是可处理的 JSON：目标是谁、走了哪个通道、状态
 
 
 
-**GitHub CI：6 项 XCTest + 15 项原生自检 + 20 项 CDP 单测通过。** 另已完成两套本机真实交互验收，以及无构建缓存的干净目录编译。
+**桌面内核已有 6 项 XCTest、15 项原生自检及 20 项 CDP 单测；v0.2.0 新增 14 项启动入口与 11 项安装打包测试。** 另已完成两套本机真实交互验收，以及无构建缓存的干净目录编译。
 
 [查看 CI 验证](https://github.com/To3akaRin/mac-computer-use/actions/runs/34208441256) · [查看验收记录与兼容范围](docs/acceptance.md)
 
@@ -136,18 +142,57 @@ node scripts/cdp.mjs --help
 
 在系统设置 → 隐私与安全中，为启动工具的终端或 Agent 应用授予“辅助功能”和“屏幕与系统音频录制”（名称依系统版本不同）。授权后重启宿主并复查 `doctor`。工具不修改系统权限数据库。
 
-### 安装到 Codex
+## 一份技能，三种安装方式
 
-仓库根目录就是技能目录。已有同名目录时先检查，不覆盖。
+### 1. 一条命令选择你的 Agent
 
 ```bash
-mkdir -p "$HOME/.codex/skills"
-git clone https://github.com/To3akaRin/mac-computer-use.git "$HOME/.codex/skills/mac-computer-use"
-cd "$HOME/.codex/skills/mac-computer-use"
-bash scripts/build.sh
+npx skills add To3akaRin/mac-computer-use
 ```
 
-其他支持 Agent Skills 的工具，将本目录放入其技能发现路径即可。核心工具独立运行，不依赖专属 MCP 插件，也不会自动安装或更新自己。
+[Skills CLI](https://github.com/vercel-labs/skills) 会引导选择其支持的 runtime 和安装范围。可以先只列出技能，或者明确指定安装到 Codex：
+
+```bash
+npx skills add To3akaRin/mac-computer-use --list
+npx skills add To3akaRin/mac-computer-use --skill mac-computer-use -g -a codex --copy
+```
+
+CLI 是可选安装工具，不是技能运行依赖。其他客户端可使用下面的 ZIP 或指定目录方式。
+
+### 2. 导入标准 ZIP 技能包
+
+在 [Release](https://github.com/To3akaRin/mac-computer-use/releases/latest) 下载 `mac-computer-use-0.2.0.zip` 和同名 `.sha256`。包内只有一个顶层 `mac-computer-use/`，其中包含 `SKILL.md`、Swift 源码及全部辅助文件。
+
+```bash
+shasum -a 256 -c mac-computer-use-0.2.0.sha256
+```
+
+WorkBuddy、千问办公可通过客户端的本地技能包导入入口安装。不能只上传 `SKILL.md`，本技能还需要配套源码和脚本。各客户端入口及来源见 [兼容表](references/runtimes.md)。
+
+### 3. 安装到指定技能目录
+
+在 macOS 上已克隆或已解压的技能根目录运行。此方式需要 Python 3 标准库完成不覆盖目标的原子提交；Skills CLI 安装、ZIP 导入及日常运行不需要这个额外依赖：
+
+```bash
+# 以 Codex 的用户技能目录为例；其他 runtime 使用它实际约定的父目录。
+sh scripts/install.sh --skills-dir "$HOME/.codex/skills" --dry-run
+sh scripts/install.sh --skills-dir "$HOME/.codex/skills"
+```
+
+安装器复制到父目录下的 `mac-computer-use/`，已存在时停止，不覆盖。预演不会创建目录或复制文件；安装不会自动编译、启动应用或修改客户端设置。
+
+## 所有 runtime 共用的启动方式
+
+以下以 Codex 安装位置举例；`SKILL_DIR` 是本段命令中显式设置的局部变量，其他 runtime 换成其实际技能路径：
+
+```bash
+SKILL_DIR="$HOME/.codex/skills/mac-computer-use"
+sh "$SKILL_DIR/scripts/run.sh" native doctor
+sh "$SKILL_DIR/scripts/run.sh" native windows
+sh "$SKILL_DIR/scripts/run.sh" cdp --help
+```
+
+原生模式检查 macOS 和 Swift 并增量构建；CDP 模式只检查 Node.js。入口支持中文、空格与符号链接路径，不切换调用者工作目录；相对截图路径仍指向你正在工作的项目。已有 `.build/release/mac-computer-use` 和 `node scripts/cdp.mjs` 用法继续有效。
 
 ## 跑通第一条原生观察流程
 
@@ -221,7 +266,7 @@ python3 scripts/native-smoke.py
 
 运行工具不需要 `.env` 或 API Key，目标、端口、超时和输出路径由参数明确传入。
 
-本版唯一新增的可选环境变量是测试用 `CHROME_BINARY`，默认指向标准 Chrome 安装路径；模板见 [.env.example](.env.example)，工具不自动加载该文件。
+**v0.2.0 无新增环境变量。** 沿用可选测试环境变量 `CHROME_BINARY`，默认指向标准 Chrome 安装路径；模板见 [.env.example](.env.example)，工具不自动加载该文件。
 
 `artifacts/`、`evidence/`、`.env` 和构建缓存默认不进入 Git。真实截图、输入内容及日志不会被工具自动上传或写回技能。
 

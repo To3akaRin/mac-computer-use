@@ -1,5 +1,7 @@
 # 内嵌 Chromium 的 CDP 控制
 
+跨 runtime 调用优先使用 `sh "$SKILL_DIR/scripts/run.sh" cdp …`。`SKILL_DIR` 由实际技能路径确定，以下保留原有直接调用方式。
+
 入口是技能根目录下 `scripts/cdp.mjs`，需要 Node.js 22.4+。先使用 `targets` 核对本地调试端口和目标；显示名或 URL 必须精确匹配且唯一，优先使用目标 id。
 
 ```bash

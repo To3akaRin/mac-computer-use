@@ -1,15 +1,36 @@
 ---
 name: mac-computer-use
 description: 操作 macOS 桌面应用，探测窗口和自动化接口、截图、读取或修改辅助功能元素、执行鼠标键盘动作，以及通过 CDP 操作内嵌 Chromium 页面。适用于桌面应用自动化与界面验收；普通网页任务优先使用已有浏览器工具。
+license: MIT
+compatibility: 需要 macOS 14+、Swift 6+、可写技能构建目录，以及读取文件和执行本机命令的能力；CDP 需要 Node.js 22.4+。桌面控制需要宿主的辅助功能和屏幕录制权限。
+metadata:
+  author: To3akaRin
+  version: "0.2.0"
 ---
 
 # Mac Computer Use
 
 本技能使用本目录中的独立工具，不需要专属 MCP 插件。所有相对路径均以本文件所在目录为基准；Agent 的当前目录可能是其他项目，执行时先解析技能根目录并使用绝对路径。
 
+## 通用入口
+
+本目录遵循开放的 Agent Skills 格式。使用 runtime 提供的文件读取、本机命令执行和图片查看能力；`agents/openai.yaml` 是可选界面元数据，不参与核心运行。
+
+先从 runtime 告知的 `SKILL.md` 路径确定技能根目录。下文的 `SKILL_DIR` 是你据此设置的局部 shell 变量，不是任何客户端的内置环境变量。
+
+```bash
+sh "$SKILL_DIR/scripts/run.sh" native doctor
+sh "$SKILL_DIR/scripts/run.sh" native windows
+sh "$SKILL_DIR/scripts/run.sh" cdp targets --endpoint http://127.0.0.1:9222
+```
+
+统一入口准备原生构建或检查 Node.js，保持当前工作目录，原样传递参数、JSON 和退出码。构建日志写入标准错误。首次原生调用需要编译；不要把正常编译等待误判为工具失联。仅支持远端 Linux 沙箱的 runtime 不能直接操作宿主 Mac，需要在具备本机命令能力的执行环境运行。
+
+安装和 runtime 接入方式见 [跨 runtime 使用](references/runtimes.md)。
+
 ## 开始前
 
-1. 根据 README 编译原生工具，运行 `doctor` 检查平台与权限。Node.js 仅用于 CDP。
+1. 通过统一入口运行 `native doctor` 检查平台与权限。Node.js 仅用于 CDP；每次更换承载工具的宿主应用后重新检查权限。
 2. 明确目标应用、窗口与用户要得到的结果。已有授权继续有效；无需把每个可逆操作拆成审批。
 3. 先 `probe` 和观察。优先应用已有 CLI、脚本字典或接口，其次 AX，再考虑鼠标键盘。发现端口只代表候选，必须验证协议及目标。
 4. 原生命令见 [原生控制](references/native.md)；内嵌 Chromium 控制见 [CDP](references/cdp.md)。参数以工具帮助和这些文档为准，不猜测。

@@ -45,3 +45,17 @@ git diff --check
 ```
 
 GUI 实测仅使用专用测试窗口与页面，不在真实业务窗口试发消息或写入。不要提交私人截图、凭据、个人绝对路径、构建产物或其他项目文件。新增测试必须验证行为，不能只匹配实现文案。
+
+
+## 通用技能分发
+
+目录安装与打包测试需要 Python 3 标准库，CI 在 macOS 上执行。
+
+修改运行或配套资源时同步 `scripts/package-files.txt`，安装和打包只使用这份逐文件清单。新资源的 Markdown 引用必须在安装副本和 ZIP 解压目录中可达。
+
+```bash
+node --test tests/launcher.test.mjs tests/install.test.mjs
+sh scripts/package.sh --output artifacts/mac-computer-use-0.2.0.zip
+```
+
+启动入口禁止切换用户工作目录或吞掉子命令退出码；安装器禁止默认覆盖已有技能。新增客户端说明必须附官方来源，分别标明协议支持和实机验收，不向通用技能正文添加客户端专属工具白名单。
