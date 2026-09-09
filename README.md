@@ -11,7 +11,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![macOS](https://img.shields.io/badge/macOS-14%2B-black?logo=apple)](docs/acceptance.md)
 
-**Swift 原生内核 · AX 语义控制 · CDP 真实输入 · 受控焦点切换 · 可验证结果**
+
 
 [快速上手](#快速上手) · [核心能力](#核心能力) · [真实验收](#真实验收) · [命令接口](API.md) · [下载](https://github.com/To3akaRin/mac-computer-use/releases/latest)
 
@@ -19,7 +19,7 @@
 
 ---
 
-## 从参考照片，走到能旋转的 3D 展区。
+## 从参考照片，走到能旋转的 3D 展区，全程没有人碰鼠标，12 分钟。
 
 ![用户提供的中央展区 3D 建模案例，浏览器中实际旋转录制](assets/showcase-3d.gif)
 
