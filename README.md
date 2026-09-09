@@ -142,44 +142,7 @@ node scripts/cdp.mjs --help
 
 在系统设置 → 隐私与安全中，为启动工具的终端或 Agent 应用授予“辅助功能”和“屏幕与系统音频录制”（名称依系统版本不同）。授权后重启宿主并复查 `doctor`。工具不修改系统权限数据库。
 
-## 一份技能，三种安装方式
 
-### 1. 一条命令选择你的 Agent
-
-```bash
-npx skills add To3akaRin/mac-computer-use
-```
-
-[Skills CLI](https://github.com/vercel-labs/skills) 会引导选择其支持的 runtime 和安装范围。可以先只列出技能，或者明确指定安装到 Codex：
-
-```bash
-npx skills add To3akaRin/mac-computer-use --list
-npx skills add To3akaRin/mac-computer-use --skill mac-computer-use -g -a codex --copy
-```
-
-CLI 是可选安装工具，不是技能运行依赖。其他客户端可使用下面的 ZIP 或指定目录方式。
-
-### 2. 导入标准 ZIP 技能包
-
-在 [Release](https://github.com/To3akaRin/mac-computer-use/releases/latest) 下载 `mac-computer-use-0.2.0.zip` 和同名 `.sha256`。包内只有一个顶层 `mac-computer-use/`，其中包含 `SKILL.md`、Swift 源码及全部辅助文件。
-
-```bash
-shasum -a 256 -c mac-computer-use-0.2.0.sha256
-```
-
-WorkBuddy、千问办公可通过客户端的本地技能包导入入口安装。不能只上传 `SKILL.md`，本技能还需要配套源码和脚本。各客户端入口及来源见 [兼容表](references/runtimes.md)。
-
-### 3. 安装到指定技能目录
-
-在 macOS 上已克隆或已解压的技能根目录运行。此方式需要 Python 3 标准库完成不覆盖目标的原子提交；Skills CLI 安装、ZIP 导入及日常运行不需要这个额外依赖：
-
-```bash
-# 以 Codex 的用户技能目录为例；其他 runtime 使用它实际约定的父目录。
-sh scripts/install.sh --skills-dir "$HOME/.codex/skills" --dry-run
-sh scripts/install.sh --skills-dir "$HOME/.codex/skills"
-```
-
-安装器复制到父目录下的 `mac-computer-use/`，已存在时停止，不覆盖。预演不会创建目录或复制文件；安装不会自动编译、启动应用或修改客户端设置。
 
 ## 所有 runtime 共用的启动方式
 
@@ -219,64 +182,14 @@ node scripts/cdp.mjs snapshot --endpoint http://127.0.0.1:9222 --target PAGE_ID
 
 `PAGE_ID` 来自探测结果，端口使用目标应用的实际端口。客户端不会因为指定端口而自动重启应用。输入、断言与批处理示例见 [CDP 指南](references/cdp.md)。
 
-## 一套轻量、可读、可扩展的实现
 
-```text
-mac-computer-use/
-├── SKILL.md              # Agent 的执行入口
-├── Sources/              # Swift 原生控制、核心规则与测试应用
-├── scripts/              # 编译入口、CDP 客户端与原生验收脚本
-├── tests/                # 自动测试与隔离测试页面
-├── references/           # 控制通道、权限和结果验证指南
-├── agents/               # Codex 元数据
-└── docs/                 # 实施规格与验收记录
-```
 
-Swift 调用 **AppKit、Accessibility、CoreGraphics、ScreenCaptureKit**；Node.js 使用原生 HTTP 与 WebSocket。项目直接控制宿主 macOS 桌面，无服务端或数据库，不使用 Docker 部署。
 
-## 开发与复现
 
-```bash
-bash scripts/build.sh
-swift test
-.build/release/NativeSelfTest
-npm test
-node --check scripts/cdp.mjs
-node --check scripts/lib/cdp.mjs
-bash -n scripts/build.sh
-```
 
-复现真实 CDP 验收，会启动并清理独立的临时 Chrome profile：
-
-```bash
-CHROME_BINARY='/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' npm run test:cdp-live
-```
-
-复现原生实机验收，另需 Python 3；运行期间暂时停止键鼠操作：
-
-```bash
-python3 scripts/native-smoke.py
-```
-
-该脚本创建并清理专用测试应用，验证合成内容。无桌面 CI 验证构建与测试逻辑，真实桌面执行由本机实测覆盖。
 
 贡献前阅读 [CONTRIBUTING.md](CONTRIBUTING.md)，行为变更同步接口、参考文档和 [CHANGELOG.md](CHANGELOG.md)。
 
-## 配置与数据
-
-运行工具不需要 `.env` 或 API Key，目标、端口、超时和输出路径由参数明确传入。
-
-**v0.2.0 无新增环境变量。** 沿用可选测试环境变量 `CHROME_BINARY`，默认指向标准 Chrome 安装路径；模板见 [.env.example](.env.example)，工具不自动加载该文件。
-
-`artifacts/`、`evidence/`、`.env` 和构建缓存默认不进入 Git。真实截图、输入内容及日志不会被工具自动上传或写回技能。
-
-## 常见问题
-
-- **窗口或元素不可访问？** 先检查 `doctor`，重新列窗口和生成快照。移动、关闭或重建后的目标不能继续使用旧引用。
-- **为什么返回 `unknown`？** 动作可能已经发生，但后置结果无法确认。先读回状态，不重复发送。
-- **能操作其他桌面吗？** 后台读取取决于应用；前台输入不会自动跨桌面，需要将目标放到当前桌面。
-- **应用用了 Chromium，为什么 CDP 连不上？** 是否开放调试取决于应用，需探测实际端口与页面。
-- **本机缺少 XCTest？** 精简 Command Line Tools 可能缺少框架；使用完整 Xcode 执行 `swift test`。独立自检和真实验收可按上面的命令运行。
 
 ## 开源协作
 
