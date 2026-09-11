@@ -4,7 +4,7 @@
 
 ### 把 Mac 桌面，变成 Agent 的执行环境。
 
-**让 Agent 看见窗口、读懂控件、输入中文、点击按钮，并拿出结果证据。**
+**让 Agent 看见窗口、主动操控电脑，替你完成相应的操作。**
 
 [![CI](https://github.com/To3akaRin/mac-computer-use/actions/workflows/ci.yml/badge.svg)](https://github.com/To3akaRin/mac-computer-use/actions/workflows/ci.yml)
 [![Release](https://img.shields.io/github/v/release/To3akaRin/mac-computer-use)](https://github.com/To3akaRin/mac-computer-use/releases)
@@ -17,7 +17,11 @@
 
 Claude Code · Codex · Kimi Code · Cursor · OpenClaw · WorkBuddy · 豆包工作 · 千问办公 · ZCode
 
-支持读取完整技能文件并执行 macOS 本机命令的 runtime 可接入；具体安装方式与实测状态见 [兼容表](references/runtimes.md)。
+** 全平台可用！ **
+
+支持读取完整技能文件并执行 macOS 本机命令的 runtime 可接入；
+
+具体安装方式与实测状态见 [兼容表](references/runtimes.md)。
 
 [快速上手](#快速上手) · [核心能力](#核心能力) · [验收记录](docs/universal-v0.2.md) · [命令接口](API.md) · [下载](https://github.com/To3akaRin/mac-computer-use/releases/latest)
 
@@ -53,15 +57,17 @@ Claude Code · Codex · Kimi Code · Cursor · OpenClaw · WorkBuddy · 豆包�
 安装技能后，可以从这些任务开始。以下是任务示例，具体可执行范围取决于目标应用暴露的控件和接口。
 
 ```text
-“探测这个 Mac 应用有哪些自动化入口，选最可靠的方式操作。”
+“给这个图片做成3d 建模。”
+
+“帮我这个应用自动连接服务器完成部署，每一步都检查结果。”
 
 “找到目标窗口，把这段中文填进指定输入框，再读回来核对。”
 
 “点击这个按钮，检查应用状态是否真的改变，截一张结果图。”
 
-“通过这个桌面客户端的 CDP 端口完成表单操作，每一步都检查结果。”
 
-“给这个桌面流程做一次回归验收，遇到未知结果就停下来检查。”
+
+
 ```
 
 ## 核心能力
