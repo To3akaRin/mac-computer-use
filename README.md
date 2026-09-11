@@ -67,6 +67,11 @@ Claude Code · Codex · Kimi Code · Cursor · OpenClaw · WorkBuddy · 豆包�
 
 ```
 
+
+
+
+
+
 ## 核心能力
 
 | 能力 | 具体能做什么 |
@@ -81,6 +86,11 @@ Claude Code · Codex · Kimi Code · Cursor · OpenClaw · WorkBuddy · 豆包�
 | **连续执行** | CDP JSON 批处理；任何一步失败、拒绝或结果未知，立即停止后续步骤。 |
 
 **控制工具在本机运行。原生内核使用系统框架，CDP 客户端零运行时 npm 依赖。** 不需要自建服务端、数据库或独立 API Key。
+
+
+
+
+
 
 
 
