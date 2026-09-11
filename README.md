@@ -15,7 +15,7 @@
 
 **基于开放的 [Agent Skills 协议](https://agentskills.io/)。一份技能包，接入多种 Agent。**
 
-Claude Code · Codex · Kimi Code · Cursor · OpenClaw · WorkBuddy · 豆包工作 · 千问办公 · ZCode
+Claude Code · Codex ·WorkBuddy · 豆包 · 千问 · Kimi Code · Cursor · OpenClaw · ZCode
 
 ### 全平台可用！ 
 
