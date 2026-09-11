@@ -4,7 +4,7 @@
 
 ### 把 Mac 桌面，变成 Agent 的执行环境。
 
-**让 Agent 看见窗口、主动操控电脑，替你完成相应的操作。**
+### 让 Agent 看见窗口、主动操控电脑，替你完成相应的操作。
 
 [![CI](https://github.com/To3akaRin/mac-computer-use/actions/workflows/ci.yml/badge.svg)](https://github.com/To3akaRin/mac-computer-use/actions/workflows/ci.yml)
 [![Release](https://img.shields.io/github/v/release/To3akaRin/mac-computer-use)](https://github.com/To3akaRin/mac-computer-use/releases)
@@ -17,7 +17,7 @@
 
 Claude Code · Codex · Kimi Code · Cursor · OpenClaw · WorkBuddy · 豆包工作 · 千问办公 · ZCode
 
-** 全平台可用！ **
+### 全平台可用！ 
 
 支持读取完整技能文件并执行 macOS 本机命令的 runtime 可接入；
 
