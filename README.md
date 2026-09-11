@@ -104,13 +104,7 @@ Claude Code · Codex ·WorkBuddy · 豆包 · 千问 · Kimi Code · Cursor · O
 
 ![项目原生工具驱动测试应用：预演、中文输入、点击与结果读回](assets/native-demo.gif)
 
-窗口画面由本项目原生工具实际截取，展示预演不改值、AX 中文写入、真实点击计数和键盘输入后的结果核对。外围阶段文案经过排版，播放节奏不作为耗时基准。[静态封面](assets/native-demo-poster.png)
-
-### CDP：让一句指令走完输入、执行与验证
-
-![CDP 实际驱动合成页面：中文输入、点击生成预览、独立状态验证](assets/cdp-demo.gif)
-
-合成页面中的输入与点击由本项目 CDP 工具真实驱动：中文进入输入框，点击生成预览，最后读取页面结果并断言一致。[静态封面](assets/cdp-demo-poster.png)
+窗口画面由本项目原生工具实际运行实现截取。外围阶段文案经过排版，播放节奏不作为耗时基准。[静态封面](assets/native-demo-poster.png)
 
 
 
