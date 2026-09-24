@@ -4,9 +4,23 @@ from pathlib import Path
 import shutil
 import subprocess
 import imageio_ffmpeg
+import argparse
 
 root = Path(__file__).resolve().parents[1]
 ffmpeg = imageio_ffmpeg.get_ffmpeg_exe()
+parser = argparse.ArgumentParser(description='编码已录制的展示帧；--native-en 只生成英文原生演示')
+parser.add_argument('--native-en', action='store_true')
+args = parser.parse_args()
+if args.native_en:
+    frames = root / 'artifacts/media-native-stage-en'
+    if not (frames / 'frame-059.png').is_file():
+        raise RuntimeError('请先运行 node scripts/media-native-stage.mjs --language en')
+    subprocess.run([ffmpeg, '-hide_banner', '-loglevel', 'error', '-y', '-framerate', '5',
+                    '-i', str(frames / 'frame-%03d.png'), '-filter_complex',
+                    '[0:v]split[a][b];[a]palettegen=stats_mode=diff[p];[b][p]paletteuse=dither=bayer:bayer_scale=3',
+                    '-loop', '0', str(root / 'assets/native-demo-en.gif')], check=True)
+    print('native-demo-en.gif', (root / 'assets/native-demo-en.gif').stat().st_size)
+    raise SystemExit(0)
 for source, output in [('media-native-stage', 'native-demo.gif'), ('media-cdp', 'cdp-demo.gif')]:
     frames = root / 'artifacts' / source
     if not list(frames.glob('frame-*.png')):

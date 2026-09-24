@@ -10,6 +10,7 @@ LICENSE
 PRODUCT.md
 Package.swift
 README.md
+README.zh-CN.md
 SKILL.md
 Sources/MacComputerUse/main.swift
 Sources/MacCore/Core.swift
@@ -19,9 +20,17 @@ agents/openai.yaml
 assets/cdp-demo-poster.png
 assets/cdp-demo.gif
 assets/demo/cdp-demo.html
+assets/demo/native-stage-en.html
 assets/demo/native-stage.html
+assets/demo/readme-hero.html
+assets/mac-computer-use-logo-dark.svg
+assets/mac-computer-use-logo-light.svg
+assets/native-demo-en-poster.png
+assets/native-demo-en.gif
 assets/native-demo-poster.png
 assets/native-demo.gif
+assets/readme-hero-poster.png
+assets/readme-hero.gif
 assets/showcase-3d-poster.jpg
 assets/showcase-3d.gif
 docs/acceptance.md
@@ -44,6 +53,7 @@ scripts/media-cdp.mjs
 scripts/media-encode.py
 scripts/media-native-stage.mjs
 scripts/media-native.py
+scripts/media-readme-hero.mjs
 scripts/native-smoke.py
 scripts/package-files.txt
 scripts/package.sh

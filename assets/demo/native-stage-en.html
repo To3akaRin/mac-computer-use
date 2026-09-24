@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="en">
+  <meta charset="utf-8" /><title>Mac Computer Use · Native proof</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: oklch(14% 0.031 262);
+      --panel: oklch(21% 0.035 260);
+      --white: oklch(96% 0.008 260);
+      --muted: oklch(70% 0.024 260);
+      --blue: oklch(60% 0.23 263);
+      --cyan: oklch(81% 0.14 191);
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      width: 1100px;
+      height: 620px;
+      overflow: hidden;
+      background: var(--bg);
+      color: var(--white);
+      font-family:
+        "Avenir Next",
+        -apple-system,
+        BlinkMacSystemFont,
+        sans-serif;
+    }
+    header {
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 38px;
+      border-bottom: 1px solid oklch(35% 0.035 262);
+      font-weight: 650;
+      font-size: 19px;
+    }
+    .brand {
+      display: flex;
+      gap: 13px;
+      align-items: center;
+    }
+    .icon {
+      width: 33px;
+      height: 25px;
+      border: 2px solid var(--blue);
+      border-radius: 6px;
+      position: relative;
+    }
+    .icon:after {
+      content: "";
+      position: absolute;
+      bottom: -7px;
+      right: -4px;
+      border-left: 9px solid var(--cyan);
+      border-top: 6px solid transparent;
+      border-bottom: 6px solid transparent;
+      transform: rotate(-35deg);
+    }
+    .meta {
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.7px;
+    }
+    main {
+      height: 440px;
+      display: flex;
+      background-image:
+        linear-gradient(oklch(35% 0.02 260 / 0.11) 1px, transparent 1px),
+        linear-gradient(90deg, oklch(35% 0.02 260 / 0.11) 1px, transparent 1px);
+      background-size: 34px 34px;
+    }
+    .story {
+      width: 335px;
+      flex-shrink: 0;
+      padding: 40px 0 25px 38px;
+    }
+    .eyebrow {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--cyan);
+      letter-spacing: 1.6px;
+    }
+    .story h1 {
+      font-size: 49px;
+      line-height: 1.12;
+      letter-spacing: -1.7px;
+      font-weight: 700;
+      margin: 23px 0 19px;
+    }
+    .story h1 span {
+      color: var(--cyan);
+    }
+    .story p {
+      font-size: 15px;
+      line-height: 1.75;
+      color: var(--muted);
+      max-width: 260px;
+    }
+    .phase {
+      display: flex;
+      gap: 7px;
+      margin-top: 25px;
+    }
+    .phase i {
+      width: 31px;
+      height: 3px;
+      background: oklch(34% 0.04 260);
+      border-radius: 2px;
+    }
+    .phase i.done {
+      background: var(--cyan);
+    }
+    .display {
+      flex: 1;
+      padding: 35px 32px 10px 12px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .window-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--muted);
+      font-size: 11px;
+      margin-bottom: 14px;
+    }
+    .window-label strong {
+      font-size: 10px;
+      letter-spacing: 1.6px;
+      color: var(--cyan);
+    }
+    .frame {
+      width: 721px;
+      height: 350px;
+      background: oklch(25% 0.04 260);
+      border: 1px solid oklch(43% 0.05 260);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      box-shadow: 0 18px 44px oklch(7% 0.02 260 / 0.5);
+    }
+    .frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+    footer {
+      height: 100px;
+      display: flex;
+      align-items: center;
+      gap: 23px;
+      padding: 0 38px;
+      border-top: 1px solid oklch(35% 0.035 262);
+      background: oklch(17% 0.027 260);
+    }
+    .number {
+      font-size: 34px;
+      font-weight: 600;
+      color: var(--blue);
+      width: 46px;
+    }
+    .caption {
+      flex: 1;
+    }
+    .caption h2 {
+      font-size: 19px;
+      margin: 0 0 8px;
+      font-weight: 600;
+    }
+    .caption code {
+      font-family: "SFMono-Regular", monospace;
+      font-size: 11px;
+      color: var(--muted);
+    }
+    .verify {
+      font-size: 11px;
+      color: var(--cyan);
+      border: 1px solid oklch(50% 0.08 195);
+      border-radius: 30px;
+      padding: 9px 13px;
+    }
+    .final .number {
+      color: var(--cyan);
+    }
+  </style>
+  <header>
+    <div class="brand"><span class="icon"></span>mac-computer-use</div>
+    <div class="meta">REAL CAPTURES · SYNTHETIC TEST APP</div>
+  </header>
+  <main>
+    <section class="story">
+      <div class="eyebrow">NATIVE MACOS EXECUTION</div>
+      <h1>Actions<br />you can<br /><span>verify.</span></h1>
+      <p>A real window. Actual input.<br />Read back the result.</p>
+      <div class="phase"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    </section>
+    <section class="display">
+      <div class="window-label">
+        <span>ScreenCaptureKit · Original window capture</span
+        ><strong id="stage">OBSERVE</strong>
+      </div>
+      <div class="frame">
+        <img id="shot" alt="Actual capture of the native test application" />
+      </div>
+    </section>
+  </main>
+  <footer>
+    <div class="number" id="num">01</div>
+    <div class="caption">
+      <h2 id="caption">Observe the target window</h2>
+      <code id="command">windows → ax → shot</code>
+    </div>
+    <div class="verify" id="verify">Target identified</div>
+  </footer>
+  <script>
+    const stages = [
+      [
+        "Observe the target window",
+        "windows → ax → shot",
+        "OBSERVE",
+        "Target identified",
+      ],
+      [
+        "Preview before acting",
+        "ax-set --dry-run · original value unchanged",
+        "PREVIEW",
+        "No write performed",
+      ],
+      [
+        "Write Chinese text through AX",
+        "ax-set → independent Accessibility readback",
+        "INPUT",
+        "Text matches",
+      ],
+      [
+        "Click. Check what changed.",
+        "click → unknown → AX counter: 1",
+        "ACT",
+        "Effect confirmed",
+      ],
+      [
+        "Verify keyboard input",
+        "Cmd+A → type → exact text readback",
+        "READ BACK",
+        "Readback matches",
+      ],
+      [
+        "Keep evidence of the result",
+        "AX counter: 2 · screenshot saved",
+        "VERIFIED",
+        "Result verified",
+      ],
+    ];
+    window.render = async (index, source, progress) => {
+      const s = stages[index];
+      document.body.classList.toggle("final", index === 5);
+      document.querySelector("#num").textContent = String(index + 1).padStart(
+        2,
+        "0",
+      );
+      document.querySelector("#caption").textContent = s[0];
+      document.querySelector("#command").textContent = s[1];
+      document.querySelector("#stage").textContent = s[2];
+      document.querySelector("#verify").textContent = s[3];
+      document
+        .querySelectorAll(".phase i")
+        .forEach((e, i) => e.classList.toggle("done", i <= index));
+      const img = document.querySelector("#shot");
+      img.src = source;
+      await img.decode();
+      document.querySelector(".frame").style.transform =
+        `translateY(${(1 - progress) * 8}px)`;
+      document.querySelector(".frame").style.opacity = 0.8 + 0.2 * progress;
+      return true;
+    };
+  </script>
+</html>

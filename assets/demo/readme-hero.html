@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>mac-computer-use · Illustrative workflow</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --ink: oklch(96% 0.012 255);
+      --muted: oklch(73% 0.035 255);
+      --navy: oklch(16% 0.03 260);
+      --blue: oklch(65% 0.2 260);
+      --teal: oklch(81% 0.13 183);
+      --rule: oklch(33% 0.045 260);
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; width: 960px; height: 540px; overflow: hidden; background: var(--navy); color: var(--ink); font-family: "Avenir Next", "Segoe UI", sans-serif; }
+    .stage { width: 960px; height: 540px; position: relative; overflow: hidden; background: radial-gradient(ellipse at 88% 84%, oklch(25% 0.067 254), transparent 56%); }
+    .grid { position: absolute; inset: 0 0 80px 370px; opacity: .23; background-image: linear-gradient(var(--rule) 1px, transparent 1px), linear-gradient(90deg, var(--rule) 1px, transparent 1px); background-size: 34px 34px; mask-image: linear-gradient(90deg, transparent, #111 23%, #111 90%, transparent); }
+    header { position: absolute; top: 35px; left: 40px; display: flex; align-items: center; gap: 12px; font-size: 20px; font-weight: 600; letter-spacing: -.6px; }
+    header svg { width: 33px; height: 33px; }
+    .illustrative { position: absolute; top: 44px; right: 39px; font-size: 11px; color: var(--muted); letter-spacing: .4px; }
+    .illustrative:before { content: ""; display: inline-block; width: 5px; height: 5px; margin: 0 7px 1px 0; background: var(--teal); border-radius: 50%; }
+    .copy { position: absolute; left: 40px; top: 121px; width: 320px; }
+    h1 { font-size: 47px; line-height: 1.15; letter-spacing: -2.1px; font-weight: 650; margin: 0; }
+    h1 span { color: var(--teal); }
+    .subtitle { margin: 26px 0 0; color: var(--muted); font-size: 16px; line-height: 1.6; }
+    .channels { margin-top: 24px; display: flex; gap: 20px; font-size: 11px; font-weight: 600; color: oklch(84% 0.026 255); }
+    .channels span { display: flex; align-items: center; gap: 7px; }
+    .channels svg { width: 14px; height: 14px; stroke: var(--teal); stroke-width: 1.6; fill: none; }
+    .windows { position: absolute; left: 399px; top: 105px; width: 530px; height: 327px; }
+    .back { position: absolute; left: 86px; top: -8px; width: 422px; height: 280px; border: 1px solid oklch(35% 0.06 255); border-radius: 13px; background: oklch(19% 0.032 255); transform: rotate(4deg); }
+    .back:before { content: ""; position: absolute; top: 33px; left: 0; right: 0; border-bottom: 1px solid oklch(28% 0.04 255); }
+    .app { position: absolute; left: 27px; top: 13px; width: 449px; height: 244px; border-radius: 12px; overflow: hidden; border: 1px solid oklch(47% 0.055 255); background: oklch(25% 0.038 255); transform: perspective(1000px) rotateY(-5deg) rotateZ(-2deg); box-shadow: 0 23px 40px oklch(10% 0.024 255 / .6); }
+    .toolbar { height: 36px; border-bottom: 1px solid var(--rule); display: flex; align-items: center; padding: 0 14px; gap: 5px; }
+    .toolbar i { width: 6px; height: 6px; border: 1px solid oklch(53% 0.04 255); border-radius: 50%; }
+    .toolbar span { margin-left: 93px; font-size: 10px; color: var(--muted); }
+    .form { padding: 22px 24px; }
+    .form h2 { font-size: 18px; font-weight: 600; letter-spacing: -.4px; margin: 0 0 17px; }
+    .label { font-size: 10px; color: var(--muted); margin-bottom: 8px; }
+    .field { position: relative; height: 48px; border: 1px solid oklch(44% 0.09 255); border-radius: 6px; padding: 14px 13px; font-size: 14px; background: oklch(19% 0.03 255); }
+    .value { color: var(--ink); }
+    .caret { color: var(--teal); font-weight: 400; }
+    .formfooter { margin-top: 17px; display: flex; justify-content: space-between; align-items: center; font-size: 10px; color: var(--muted); }
+    .button { font-size: 10px; padding: 8px 18px; border: 1px solid oklch(47% 0.09 255); border-radius: 5px; color: oklch(85% 0.04 255); }
+    .selection { position: absolute; left: 46px; top: 125px; width: 412px; height: 67px; border: 1.5px solid var(--blue); border-radius: 8px; transform: rotate(-2deg); }
+    .selection:before { content: "AXTextField · message"; position: absolute; right: -1px; top: -22px; color: oklch(88% 0.03 255); background: oklch(42% 0.13 259); font: 10px "SFMono-Regular", Consolas, monospace; padding: 4px 8px; border-radius: 4px 4px 0 0; }
+    .cross { position: absolute; width: 6px; height: 6px; background: var(--blue); border: 1px solid oklch(82% 0.09 255); }
+    .cross:nth-child(1) { left: -4px; top: -4px; } .cross:nth-child(2) { right: -4px; top: -4px; } .cross:nth-child(3) { left: -4px; bottom: -4px; } .cross:nth-child(4) { right: -4px; bottom: -4px; }
+    .cursor { position: absolute; left: 300px; top: 171px; width: 27px; height: 34px; filter: drop-shadow(0 2px 5px oklch(8% 0.02 255)); }
+    .readback { position: absolute; left: -3px; top: 225px; width: 442px; height: 117px; background: oklch(18% 0.03 258); border: 1px solid oklch(43% 0.05 255); border-radius: 9px; box-shadow: 0 15px 24px oklch(10% 0.02 255 / .65); transform: rotate(1deg); }
+    .readbacktitle { display: flex; align-items: center; justify-content: space-between; padding: 12px 17px 9px; font-size: 11px; border-bottom: 1px solid oklch(28% 0.03 255); }
+    .readbacktitle .type { color: var(--muted); font-size: 9px; }
+    .code { padding: 12px 17px 0; font: 11px/1.7 "SFMono-Regular", Consolas, monospace; color: oklch(72% 0.04 255); }
+    .code b { color: var(--teal); font-weight: 500; }
+    .code .state { color: oklch(88% 0.03 255); }
+    footer { position: absolute; left: 40px; right: 40px; top: 463px; border-top: 1px solid oklch(31% 0.04 255); display: flex; align-items: center; gap: 37px; padding-top: 22px; }
+    .phase { display: flex; align-items: center; gap: 10px; color: oklch(56% 0.03 255); font-size: 12px; }
+    .phase .num { font-family: "SFMono-Regular", Consolas, monospace; font-size: 10px; }
+    .phase.active { color: var(--ink); }
+    .phase.active .num { color: var(--teal); }
+    .phase.complete { color: oklch(77% 0.045 255); }
+    .line { position: absolute; top: -1px; left: 0; width: 280px; height: 2px; background: var(--teal); transform-origin: left; }
+    .footnote { margin-left: auto; font-size: 10px; color: var(--muted); }
+  </style>
+  <main class="stage" aria-label="Illustrated agent workflow: observe a text field, write text, and read it back.">
+    <div class="grid"></div>
+    <header>
+      <svg viewBox="0 0 64 64" aria-hidden="true"><path d="M9 9h40a7 7 0 0 1 7 7v13M9 9a7 7 0 0 0-7 7v34a7 7 0 0 0 7 7h21M3 22h51" stroke="#4285ff" stroke-width="4" fill="none" stroke-linecap="round"/><path d="m36 31 25 16-12 3-5 12-8-31Z" fill="#25d4cc"/></svg>
+      mac-computer-use
+    </header>
+    <div class="illustrative">Illustrative workflow</div>
+    <section class="copy">
+      <h1>Give your agent<br><span>hands on</span><br>your Mac.</h1>
+      <p class="subtitle">Observe windows. Take action.<br>Verify the result.</p>
+      <div class="channels">
+        <span><svg viewBox="0 0 16 16"><rect x="2" y="3" width="12" height="10" rx="2"/><path d="M2 6h12"/></svg>Native apps</span>
+        <span><svg viewBox="0 0 16 16"><path d="m5 4-4 4 4 4m6-8 4 4-4 4m-4 2 2-12"/></svg>CDP</span>
+      </div>
+    </section>
+    <div class="windows">
+      <div class="back"></div>
+      <div class="app">
+        <div class="toolbar"><i></i><i></i><i></i><span>Example application</span></div>
+        <div class="form">
+          <h2>Project notes</h2><div class="label">Message</div>
+          <div class="field"><span class="value"></span><span class="caret"></span></div>
+          <div class="formfooter"><span>Local window · editable text field</span><span class="button">Save</span></div>
+        </div>
+      </div>
+      <div class="selection"><i class="cross"></i><i class="cross"></i><i class="cross"></i><i class="cross"></i></div>
+      <svg class="cursor" viewBox="0 0 28 36" aria-hidden="true"><path d="m3 2 23 19-12 1-6 11-5-31Z" fill="#eaf1ff" stroke="#071327" stroke-width="2" stroke-linejoin="round"/></svg>
+      <div class="readback"><div class="readbacktitle"><span id="readback-title">01 / Observe</span><span class="type">ILLUSTRATED TOOL OUTPUT</span></div><div class="code" id="readback-code"></div></div>
+    </div>
+    <footer><div class="line"></div><div class="phase"><span class="num">01</span>Observe</div><div class="phase"><span class="num">02</span>Act</div><div class="phase"><span class="num">03</span>Verify</div><span class="footnote">One skill. Your agent. Your Mac.</span></footer>
+  </main>
+  <script>
+    // 固定帧时间轴：浏览器预览与 GIF 使用相同的帧，不依赖截图机器速度。
+    const labels = ["01 / Observe", "02 / Act", "03 / Verify"];
+    const sentence = "Hello from my agent.";
+    const phaseNodes = [...document.querySelectorAll(".phase")];
+    window.render = function(frame) {
+      frame = Math.max(0, Math.min(79, Math.floor(frame)));
+      const phase = frame < 24 ? 0 : frame < 51 ? 1 : 2;
+      const progress = phase === 0 ? frame / 23 : phase === 1 ? (frame - 24) / 26 : (frame - 51) / 28;
+      const count = phase === 0 ? 0 : phase === 1 ? Math.min(sentence.length, Math.floor(progress * 27)) : sentence.length;
+      document.querySelector(".value").textContent = sentence.slice(0, count);
+      document.querySelector(".caret").textContent = phase === 1 && count < sentence.length ? "|" : "";
+      document.querySelector(".selection").style.opacity = phase === 0 ? Math.min(1, .55 + progress) : phase === 1 ? .6 : .25;
+      const cursorX = phase === 0 ? 300 - Math.min(progress * 1.5, 1) * 127 : 173;
+      const cursorY = phase === 0 ? 171 - Math.min(progress * 1.5, 1) * 8 : 163;
+      document.querySelector(".cursor").style.transform = `translate(${cursorX - 300}px,${cursorY - 171}px)`;
+      document.querySelector(".cursor").style.opacity = phase === 2 ? .4 : 1;
+      document.querySelector("#readback-title").textContent = labels[phase];
+      document.querySelector("#readback-code").innerHTML = phase === 0 ? 'role: <span class="state">AXTextField</span> &nbsp; · &nbsp; match: <b>1</b><br>target: <span class="state">Project notes / Message</span>' : phase === 1 ? 'action: <span class="state">set field value</span><br>text: <b>"' + sentence.slice(0, count) + '"</b>' : 'read_back: <span class="state">"Hello from my agent."</span><br>value_matches: <b>true</b>';
+      phaseNodes.forEach((node, i) => node.className = "phase" + (i === phase ? " active" : i < phase ? " complete" : ""));
+      document.querySelector(".line").style.transform = `translateX(${phase * 143}px) scaleX(${.26 + .13 * progress})`;
+      return { frame, phase: labels[phase], illustrative: true };
+    };
+    const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    window.render(still ? 65 : 0);
+    // 默认静态展示。使用 ?play=1 预览；导出脚本逐帧调用 render。
+    if (new URLSearchParams(location.search).has("play") && !still) {
+      const started = performance.now();
+      const animate = now => { window.render(Math.floor((now - started) / 100) % 80); requestAnimationFrame(animate); };
+      requestAnimationFrame(animate);
+    }
+  </script>
+</html>

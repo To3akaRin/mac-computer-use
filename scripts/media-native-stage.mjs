@@ -6,7 +6,24 @@ import { join, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { Client, targets, execute } from "./lib/cdp.mjs";
 const root = resolve(fileURLToPath(new URL("..", import.meta.url)));
-const output = join(root, "artifacts/media-native-stage");
+const args = process.argv.slice(2);
+if (
+  args.length &&
+  !(
+    args.length === 2 &&
+    args[0] === "--language" &&
+    ["en", "zh"].includes(args[1])
+  )
+) {
+  throw new Error(
+    "用法：node scripts/media-native-stage.mjs [--language en|zh]",
+  );
+}
+const english = args[1] === "en";
+const output = join(
+  root,
+  english ? "artifacts/media-native-stage-en" : "artifacts/media-native-stage",
+);
 await mkdir(output, { recursive: true });
 const recording = JSON.parse(
   await readFile(join(root, "artifacts/media-native/recording.json"), "utf8"),
@@ -14,7 +31,14 @@ const recording = JSON.parse(
 if (recording.frames.length !== 6)
   throw new Error("请先完成原生演示录制，必须包含6帧");
 const profile = await mkdtemp(join(tmpdir(), "mac-computer-use-stage-"));
-const page = pathToFileURL(join(root, "assets/demo/native-stage.html")).href;
+const page = pathToFileURL(
+  join(
+    root,
+    english
+      ? "assets/demo/native-stage-en.html"
+      : "assets/demo/native-stage.html",
+  ),
+).href;
 const browser = spawn(
   process.env.CHROME_BINARY ||
     "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
@@ -84,7 +108,12 @@ try {
   }
   await copyFile(
     join(output, "frame-059.png"),
-    join(root, "assets/native-demo-poster.png"),
+    join(
+      root,
+      english
+        ? "assets/native-demo-en-poster.png"
+        : "assets/native-demo-poster.png",
+    ),
   );
   console.log(
     JSON.stringify({
