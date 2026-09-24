@@ -87,12 +87,6 @@ These are task examples for your agent to plan. What it can complete depends on 
 
 **Local execution. System-native frameworks. Zero runtime npm dependencies for the CDP client.** The control tools need no hosted backend, database, or separate API key. Your agent runtime and model have their own requirements.
 
-### Native Mac: observe, type, click, read back
-
-![Real native-tool captures showing a dry run, Chinese text input, a click, and a result readback](assets/native-demo-en.gif)
-
-The window captures come from this project's native tools driving a dedicated test app. English captions and playback pacing are presentation layers, not a timing benchmark. The app's original on-screen text is unchanged. [Static preview](assets/native-demo-en-poster.png) · [Recording notes (Chinese)](docs/media.md)
-
 ## Observe → Act → Verify
 
 Desktop automation needs to hit the right target **and successfully determine whether the action took effect**.
